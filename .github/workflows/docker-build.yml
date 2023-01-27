@@ -47,7 +47,6 @@ jobs:
     # needs: Test   # disable this requirement as tests are failing for now
     runs-on: ubuntu-latest
     steps:
-      - run: cd app
       - name: Debug
         run: |
           echo ${{ vars.DOCKER_HUB_IMAGE }}
