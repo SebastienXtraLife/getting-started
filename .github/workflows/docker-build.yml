@@ -61,6 +61,6 @@ jobs:
       - name: Building and pushing the Docker image
         uses: docker/build-push-action@v3
         with:
-          context: ./app/
+          context: ./app
           push: true
           tags: ${{ vars.DOCKER_HUB_IMAGE }}:${{ github.ref_name }}
