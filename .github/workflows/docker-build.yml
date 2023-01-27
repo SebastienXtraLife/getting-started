@@ -7,46 +7,56 @@ on:
       - v**
 
 jobs:
-  debug:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
-      - uses: actions/cache@v3
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+  # yarn_cache:   # not needed as the setup-node@v3 action will handle this by itself
+  #   name: Yarn Cache
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Get yarn cache directory path
+  #       id: yarn-cache-dir-path
+  #       run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+  #     - name: Restore yarn cache
+  #       id: yarn-cache   # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+  #       uses: actions/cache@v3
+  #       with: Check Yarn cache directory path
+  #         path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+  #         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}   # app's yarn lockfile is located here: app/yarn.lock
+  #         restore-keys: |
+  #           ${{ runner.os }}-yarn-
 
   install:
     name: Install
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Checking out repository
+        uses: actions/checkout@v3
+      - name: Setting up Node
+        uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: yarn   # do NOT cache the node_modules folder though
+          cache: yarn   # doesn't cache the node_modules folder though
           cache-dependency-path: app/yarn.lock
       - name: Installing dependencies
-        run: yarn install --frozen-lockfile   # optional: --immutable to abort if the lockfile was to be modified
+        run: |
+          cd app
+          yarn install --frozen-lockfile   # optional: --immutable to abort if the lockfile was to be modified
 
   test:
     name: Test
     needs: Install
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Checking out repository
+        uses: actions/checkout@v3
+      - name: Setting up Node
+        uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: yarn   # do NOT cache the node_modules folder though
+          cache: yarn   # doesn't cache the node_modules folder though
           cache-dependency-path: app/yarn.lock
-      - name: Testing App
-        run: yarn test
+      - name: Testing app
+        run: |
+          cd app
+          yarn test
 
 #   build:
 #     name: Build
