@@ -47,8 +47,8 @@ jobs:
     # needs: Test   # disable this requirement as tests are failing for now
     runs-on: ubuntu-latest
     steps:
-      # - name: Checking out repository   # no need to checkout as the build-push-action@v3 action will care about that
-      #   uses: actions/checkout@v3
+      - name: Checking out repository   # no need to checkout as the build-push-action@v3 action will care about that
+        uses: actions/checkout@v3
       - name: Setting up Docker QEMU
         uses: docker/setup-qemu-action@v2   # add support for more platforms with QEMU (optional): https://github.com/docker/setup-qemu-action
       - name: Setting up Docker Buildx
@@ -61,6 +61,9 @@ jobs:
       - name: Building and pushing the Docker image
         uses: docker/build-push-action@v3
         with:
-          context: ./app
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          context: .
+          file: app/Dockerfile
           push: true
           tags: ${{ vars.DOCKER_HUB_IMAGE }}:${{ github.ref_name }}
