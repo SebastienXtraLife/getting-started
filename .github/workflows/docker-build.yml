@@ -1,5 +1,5 @@
 name: Docker Build
-run-name: ${{ github.actor }} triggers ${{ github.action }} from ${{ github.ref_name }}
+run-name: ${{ github.actor }} triggers ${{ GITHUB_WORKFLOW }} from ${{ github.ref_name }}
 
 on:
   push:
@@ -8,6 +8,7 @@ on:
 
 jobs:
   debug:
+    runs-on: ubuntu-latest
     steps:
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
