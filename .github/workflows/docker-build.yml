@@ -23,8 +23,8 @@ jobs:
   #         restore-keys: |
   #           ${{ runner.os }}-yarn-
 
-  install:
-    name: Install
+  install_test:
+    name: Install > Test
     runs-on: ubuntu-latest
     steps:
       - name: Checking out repository
@@ -39,20 +39,6 @@ jobs:
         run: |
           cd app
           yarn install --frozen-lockfile   # optional: --immutable to abort if the lockfile was to be modified
-
-  test:
-    name: Test
-    needs: Install
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checking out repository
-        uses: actions/checkout@v3
-      - name: Setting up Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: yarn   # doesn't cache the node_modules folder though
-          cache-dependency-path: app/yarn.lock
       - name: Testing app
         run: |
           cd app
