@@ -61,10 +61,8 @@ jobs:
       - name: Building and pushing the Docker image
         uses: docker/build-push-action@v3
         with:
-          no-cache: true   # disable the cache to prevent breaking the build process until finding out how to specify the cache-key path is located here ./app/yarn.lock (and not ./yarn.lock)
-          # cache-from: type=gha
-          # cache-to: type=gha,mode=max
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           # context: .   # not needed, Git context by default
-          file: app/Dockerfile
           push: true
           tags: ${{ vars.DOCKER_HUB_IMAGE }}:${{ github.ref_name }}
