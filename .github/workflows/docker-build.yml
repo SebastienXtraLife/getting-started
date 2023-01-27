@@ -1,5 +1,5 @@
 name: Docker Build
-run-name: ${{ github.actor }} triggers ${{ GITHUB_WORKFLOW }} from ${{ github.ref_name }}
+run-name: ${{ github.actor }} triggers $GITHUB_WORKFLOW from ${{ github.ref_name }}
 
 on:
   push:
