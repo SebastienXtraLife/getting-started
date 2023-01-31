@@ -62,7 +62,7 @@ jobs:
           registry-url: https://registry.npmjs.org
       - name: Pushing package
         run: |
-          yarn
+          yarn install --frozen-lockfile   # --immutable instead of --frozen-lockfile if using Yarn 2 ; npm equivalent command: npm ci
           yarn publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}   # secrets.GITHUB_TOKEN
