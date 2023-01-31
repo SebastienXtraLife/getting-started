@@ -1,5 +1,6 @@
 name: Docker Build
-run-name: ${{ github.actor }} triggered Docker Build workflow by pushing tag ${{ github.ref_name }}
+# run-name: ${{ github.actor }} triggered Docker Build workflow by pushing tag ${{ github.ref_name }}
+run-name: ${{ github.actor }} triggered Docker Build workflow by creating release ${{ github.ref_name }}
 
 on:
   # push:
@@ -59,10 +60,6 @@ jobs:
           cache-dependency-path: app/yarn.lock
           node-version: 18
           registry-url: https://registry.npmjs.org
-      # - name: Installing dependencies
-      #   run: |
-      #     cd app
-      #     yarn install --frozen-lockfile   # --immutable instead of --frozen-lockfile if using Yarn 2 ; npm equivalent command: npm ci
       - name: Pushing package
         run: |
           yarn
