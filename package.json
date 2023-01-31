@@ -1,6 +1,10 @@
 {
-  "name": "101-app",
-  "version": "1.0.0",
+  "name": "sebastien-xl-getting-started",
+  "version": "1.3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SebastienXtraLife/getting-started.git"
+  },
   "main": "index.js",
   "license": "MIT",
   "scripts": {

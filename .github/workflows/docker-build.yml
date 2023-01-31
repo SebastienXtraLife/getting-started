@@ -2,9 +2,11 @@ name: Docker Build
 run-name: ${{ github.actor }} triggered Docker Build workflow by pushing tag ${{ github.ref_name }}
 
 on:
-  push:
-    tags:
-      - v**
+  # push:
+  #   tags:
+  #     - v**
+  release:
+    types: [created]
 
 jobs:
   # yarn_cache:   # not needed as the setup-node@v3 action will handle this by itself (+ cache not preserved between tags anyway)
@@ -32,17 +34,43 @@ jobs:
   #     - name: Setting up Node
   #       uses: actions/setup-node@v3
   #       with:
-  #         node-version: 18
   #         cache: yarn   # doesn't cache the node_modules folder though
   #         cache-dependency-path: app/yarn.lock
+  #         node-version: 18
   #     - name: Installing dependencies
   #       run: |
   #         cd app
-  #         yarn install --frozen-lockfile   # optional: --immutable to abort if the lockfile was to be modified
+  #         yarn install --frozen-lockfile   # --immutable instead of --frozen-lockfile if using Yarn 2 ; npm equivalent command: npm ci
   #     - name: Testing app
   #       run: yarn test
 
-  build_docker:
+  push_npm:
+    name: Push NPM
+    # needs: Test   # disable this requirement as tests are failing for now (permission denied to create folders while testing)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checking out repository
+        uses: actions/checkout@v3
+      - name: Setting up Node
+        uses: actions/setup-node@v3
+        with:
+          always-auth: true
+          cache: yarn   # doesn't cache the node_modules folder though
+          cache-dependency-path: app/yarn.lock
+          node-version: 18
+          registry-url: https://registry.npmjs.org
+      # - name: Installing dependencies
+      #   run: |
+      #     cd app
+      #     yarn install --frozen-lockfile   # --immutable instead of --frozen-lockfile if using Yarn 2 ; npm equivalent command: npm ci
+      - name: Pushing package
+        run: |
+          yarn
+          yarn publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}   # secrets.GITHUB_TOKEN
+
+  build_push_docker:
     name: Build/Push Docker
     # needs: Test   # disable this requirement as tests are failing for now (permission denied to create folders while testing)
     runs-on: ubuntu-latest
