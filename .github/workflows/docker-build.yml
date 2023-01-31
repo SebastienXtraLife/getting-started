@@ -36,7 +36,7 @@ jobs:
   #       uses: actions/setup-node@v3
   #       with:
   #         cache: yarn   # doesn't cache the node_modules folder though
-  #         cache-dependency-path: app/yarn.lock
+  #         cache-dependency-path: yarn.lock
   #         node-version: 18
   #     - name: Installing dependencies
   #       run: |
@@ -57,7 +57,7 @@ jobs:
         with:
           always-auth: true
           cache: yarn   # doesn't cache the node_modules folder though
-          cache-dependency-path: app/yarn.lock
+          cache-dependency-path: yarn.lock
           node-version: 18
           registry-url: https://registry.npmjs.org
       - name: Pushing package
